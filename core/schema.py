@@ -2,12 +2,12 @@ import graphene
 from graphene_django import DjangoObjectType
 from parking.models import ParkingSpot
 
-
 class ParkingType(DjangoObjectType):
     class Meta:
         model = ParkingSpot
         fields = ('sensor_id', 'sensor_status', 'sensor_location', 'sensor_type' )
         
+# REGISTRA UN SENSOR
 class CreateSpot(graphene.Mutation):
     class Arguments:
         sensor_id = graphene.String()
@@ -22,6 +22,7 @@ class CreateSpot(graphene.Mutation):
         spot.save()
         return CreateSpot(spot)
 
+# ELIMINA UN SPOT
 class DeleteSpot(graphene.Mutation):
     class Arguments:
         sensor_id = graphene.String()
@@ -33,7 +34,7 @@ class DeleteSpot(graphene.Mutation):
         spot.delete()
         return DeleteSpot(ok=True)
 
-
+# ACTUALIZA EL SPOT
 class UpdateSpot(graphene.Mutation):
     class Arguments:
         sensor_id = graphene.String()
@@ -64,9 +65,8 @@ class Query(graphene.ObjectType):
       
 # MUTACIONES (POST, PUT, DELETE) O EQUIVALENTE
 class Mutation(graphene.ObjectType):
-  create_spot = CreateSpot.Field()
-  delete_spot = DeleteSpot.Field()
-  update_spot = UpdateSpot.Field()
+  create_spot = CreateSpot.Field() # REGISTRAR EL DATO EQUIVALENTE AL POST
+  delete_spot = DeleteSpot.Field() # ELIMINAR EL DATO EQUIVALENTE AL DELETE
+  update_spot = UpdateSpot.Field() # ACTUALIZAR EL DATO EQUIVALENTE AL PUT O AL PATCH
   
-      
 schema = graphene.Schema(query=Query, mutation=Mutation)
